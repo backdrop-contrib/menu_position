@@ -224,6 +224,24 @@ function menu_position_menu_link_alter(&$item) {
 }
 
 /**
+ * Implements hook_menu_block_tree_alter().
+ */
+function menu_position_menu_block_tree_alter(&$tree, &$config) {
+  _menu_position_hide_links($tree);
+}
+
+function _menu_position_hide_links(&$tree) {
+  foreach ($tree as $key => $link) {
+    if ($tree[$key]['link']['tab_root'] == 'menu-position/%') {
+      $tree[$key]['link']['hidden'] = 1;
+    }
+    if (!empty($tree[$key]['below'])) {
+      _menu_position_hide_links($tree[$key]['below']);
+    }
+  }
+}
+
+/**
  * Implements hook_menu_link_update().
  */
 function menu_position_menu_link_update($link) {
